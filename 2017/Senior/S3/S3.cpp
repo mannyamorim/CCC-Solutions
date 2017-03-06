@@ -1,4 +1,4 @@
-// CCC 2016 Senior 3
+// CCC 2017 Senior 3
 // Solution by Emmanuel Mathi-Amorim
 
 #include <iostream>
