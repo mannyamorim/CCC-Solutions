@@ -15,11 +15,6 @@ public class Main
         Scanner sc = new Scanner(System.in);
         int numOfWood = sc.nextInt();
 
-        for (int i = 0; i < 2001; i++)
-        {
-            amountOf[i] = 0;
-        }
-
         for( int i = 0; i < numOfWood; i++ )
         {
             int length = sc.nextInt();
