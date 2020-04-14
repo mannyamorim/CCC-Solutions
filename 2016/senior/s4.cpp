@@ -1,5 +1,8 @@
-// CCC 2016 Senior 4
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 Senior 4 - Combining Rice Balls
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <iostream>
 #include <string>

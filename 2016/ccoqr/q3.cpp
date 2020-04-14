@@ -1,5 +1,8 @@
-// CCC 2016 CCOQR 3
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 CCOQR 3 - Data Structure
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <iostream>
 #include <string>

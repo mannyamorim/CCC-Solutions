@@ -1,5 +1,8 @@
-// CCC 2016 CCOQR 1
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 CCOQR 1 - Stupendous Bowties
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <algorithm>
 #include <iostream>

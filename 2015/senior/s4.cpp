@@ -1,5 +1,8 @@
-// CCC 2015 Senior 4
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2015 Senior 4 - Convex Hull
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <cstdio>
 #include <cstdlib>

@@ -1,5 +1,8 @@
-// CCC 2016 CCOQR 2
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 CCOQR 2 - Through A Maze Darkly
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <iostream>
 #include <string>

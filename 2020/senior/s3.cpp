@@ -1,3 +1,9 @@
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2020 Senior 3 - Searching for Strings
+ * Copyright (c) 2020 Emmanuel Mathi-Amorim
+ */
+
 #include <cstdio>
 #include <cstring>
 

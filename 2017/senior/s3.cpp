@@ -1,5 +1,8 @@
-// CCC 2017 Senior 3
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2017 Senior 3 - Nailed It!
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <iostream>
 #include <algorithm>

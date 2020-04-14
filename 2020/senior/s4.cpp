@@ -1,3 +1,9 @@
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2020 Senior 4 - Swapping Seats
+ * Copyright (c) 2020 Emmanuel Mathi-Amorim
+ */
+
 #include <climits>
 #include <cstdio>
 #include <cstring>

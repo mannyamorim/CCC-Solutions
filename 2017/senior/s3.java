@@ -1,6 +1,10 @@
-// CCC 2017 Senior 3
-// Solution by Emmanuel Mathi-Amorim
-// Refractoring by Tobias Carryer
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2017 Senior 3 - Nailed It!
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim, Tobias Carryer
+ * Solution by Emmanuel Mathi-Amorim
+ * Refractoring by Tobias Carryer
+ */
 
 import java.util.Scanner;
 

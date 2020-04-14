@@ -1,5 +1,8 @@
-// CCC 2016 Senior 5
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 Senior 5 - Circle of Life
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <iostream>
 #include <string>

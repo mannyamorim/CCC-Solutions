@@ -1,5 +1,8 @@
-// CCC 2016 Senior 3
-// Solution by Emmanuel Mathi-Amorim
+/* SPDX-License-Identifier: MIT */
+/*
+ * CCC 2016 Senior 3 - Phonomenal Reviews
+ * Copyright (c) 2017 Emmanuel Mathi-Amorim
+ */
 
 #include <cstring>
 #include <iostream>
