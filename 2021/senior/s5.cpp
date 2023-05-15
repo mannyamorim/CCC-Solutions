@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <unordered_map>
 
 /* prime factors */
 constexpr uint8_t NUM_PRIMES = 6;
@@ -25,6 +26,7 @@ struct prime_factor {
 struct range {
 	uint32_t start;
 	uint32_t end;
+	uint8_t z;
 	prime_factor factor;
 };
 
@@ -41,7 +43,7 @@ uint32_t n, m;
 range ranges[150000];
 
 /* ordered map of range start and end indices to index of range within ranges array */
-std::multimap<uint32_t, uint32_t> range_map;
+std::multimap<uint32_t, std::pair<uint32_t, bool>> range_map;
 
 /* compute prime factors for an integer */
 void factorize(uint8_t z, prime_factor *factor)
@@ -84,13 +86,11 @@ void read_input()
 	scanf("%" SCNu32 " %" SCNu32, &n, &m);
 
 	for (uint32_t i = 0; i < m; i++) {
-		uint8_t z;
-		scanf("%" SCNu32 " %" SCNu32 " %" SCNu8, &ranges[i].start, &ranges[i].end, &z);
-		factorize(z, &ranges[i].factor);
+		scanf("%" SCNu32 " %" SCNu32 " %" SCNu8, &ranges[i].start, &ranges[i].end, &ranges[i].z);
+		factorize(ranges[i].z, &ranges[i].factor);
 
-		range_map.emplace(ranges[i].start, i);
-		if (ranges[i].start != ranges[i].end)
-			range_map.emplace(ranges[i].end, i);
+		range_map.emplace(ranges[i].start, std::make_pair(i, true));
+		range_map.emplace(ranges[i].end, std::make_pair(i, false));
 	}
 }
 
@@ -122,47 +122,53 @@ bool prime_factor_eq(prime_factor *factor_a, prime_factor *factor_b)
 void solve()
 {
 	uint32_t output[150001];
-	std::map<uint32_t, prime_factor> current_ranges;
+	std::unordered_map<uint32_t, prime_factor> satisfied_ranges;
+	std::unordered_map<uint32_t, prime_factor> unsatisfied_ranges;
 
 	auto it = range_map.begin();
 
 	prime_factor curr_factor;
 	memset(&curr_factor, 0, sizeof(curr_factor));
+	uint32_t curr_factor_count[10] = { 0 };
 	uint32_t curr_value = 1;
 	uint32_t last_pos = 1;
 
 	while (it != range_map.end()) {
+		uint32_t pos = it->first;
+		uint32_t range_id = it->second.first;
+
 		/* populate lists of ranges starting and ending */
 		std::vector<uint32_t> starting;
 		std::vector<uint32_t> ending;
 
-		uint32_t pos = it->first;
-		if (current_ranges.count(it->second)) {
-			ending.push_back(it->second);
-		} else {
-			starting.push_back(it->second);
-			if (ranges[it->second].start == ranges[it->second].end)
-				ending.push_back(it->second);
-		}
+		if (it->second.second)
+			starting.push_back(range_id);
+		else
+			ending.push_back(range_id);
 
 		/* write out values since the last position */
 		for (uint32_t i = last_pos; i < pos; i++)
 			output[i] = curr_value;
 
-		/* update all ranges with the previous value */
-		for (auto &it : current_ranges) {
-			prime_factor_min(&it.second, &curr_factor);
+		/* update all current ranges */
+		for (auto it = unsatisfied_ranges.begin(); it != unsatisfied_ranges.end();) {
+			prime_factor_min(&it->second, &curr_factor);
+
+			/* all we need to do is reach the mimimum once */
+			if (prime_factor_eq(&it->second, &ranges[it->first].factor)) {
+				satisfied_ranges.emplace(it->first, it->second);
+				it = unsatisfied_ranges.erase(it);
+			} else {
+				++it;
+			}
 		}
 
 		/* look for other ranges starting or ending at pos */
 		while ((++it)->first == pos) {
-			if (current_ranges.count(it->second)) {
-				ending.push_back(it->second);
-			} else {
-				starting.push_back(it->second);
-				if (ranges[it->second].start == ranges[it->second].end)
-					ending.push_back(it->second);
-			}
+			if (it->second.second)
+				starting.push_back(it->second.first);
+			else
+				ending.push_back(it->second.first);
 		}
 
 		/* process starting ranges */
@@ -170,28 +176,64 @@ void solve()
 			prime_factor_max(&curr_factor, &ranges[it].factor);
 			prime_factor factor_min;
 			memset(&factor_min, 255, sizeof(factor_min));
-			current_ranges.emplace(it, factor_min);
+			unsatisfied_ranges.emplace(it, factor_min);
+
+			if (ranges[it].factor.power[0] > 0)
+				curr_factor_count[ranges[it].factor.power[0] - 1]++;
+			if (ranges[it].factor.power[1] > 0)
+				curr_factor_count[ranges[it].factor.power[1] + 3]++;
+			for (uint8_t i = 2; i < NUM_PRIMES; i++)
+				curr_factor_count[i + 4] += ranges[it].factor.power[i];
 		}
 
 		/* update all current ranges */
-		for (auto &it : current_ranges) {
-			prime_factor_min(&it.second, &curr_factor);
+		for (auto it = unsatisfied_ranges.begin(); it != unsatisfied_ranges.end();) {
+			prime_factor_min(&it->second, &curr_factor);
+
+			/* all we need to do is reach the mimimum once */
+			if (prime_factor_eq(&it->second, &ranges[it->first].factor)) {
+				satisfied_ranges.emplace(it->first, it->second);
+				it = unsatisfied_ranges.erase(it);
+			} else {
+				++it;
+			}
 		}
 
 		output[pos] = multiply(&curr_factor);
 
 		/* process ending ranges */
 		for (auto &it : ending) {
-			if (!prime_factor_eq(&current_ranges[it], &ranges[it].factor)) {
+			if (ranges[it].factor.power[0] > 0)
+				curr_factor_count[ranges[it].factor.power[0] - 1]--;
+			if (ranges[it].factor.power[1] > 0)
+				curr_factor_count[ranges[it].factor.power[1] + 3]--;
+			for (uint8_t i = 2; i < NUM_PRIMES; i++)
+				curr_factor_count[i + 4] -= ranges[it].factor.power[i];
+
+			if (satisfied_ranges.count(it) == 0) {
 				printf("Impossible");
 				return;
 			}
-			current_ranges.erase(it);
+			satisfied_ranges.erase(it);
 		}
 
-		memset(&curr_factor, 0, sizeof(curr_factor));
-		for (auto &it : current_ranges)
-			prime_factor_max(&curr_factor, &ranges[it.first].factor);
+		/* calculate curr_factor */
+		curr_factor.power[0] = 0;
+		for (int i = 3; i >= 0; i--) {
+			if (curr_factor_count[i] > 0) {
+				curr_factor.power[0] = i + 1;
+				break;
+			}
+		}
+		curr_factor.power[1] = 0;
+		for (int i = 1; i >= 0; i--) {
+			if (curr_factor_count[i + 4] > 0) {
+				curr_factor.power[1] = i + 1;
+				break;
+			}
+		}
+		for (uint8_t i = 2; i < NUM_PRIMES; i++)
+			curr_factor.power[i] = (curr_factor_count[i + 4] > 0) ? 1 : 0;
 
 		last_pos = pos + 1;
 		curr_value = multiply(&curr_factor);
